@@ -78,13 +78,23 @@
         </div>
 
 
-        <div class="mt-3">
-            <label>สถานะ</label>
-            <select class="form-control" wire:model="status">
-                @foreach ($listStatus as $status)
-                    <option value="{{ $status }}">{{ $status }}</option>
-                @endforeach
-            </select>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+            <div>
+                <label>สถานะ</label>
+                <select class="form-control" wire:model="status">
+                    @foreach ($listStatus as $status)
+                        <option value="{{ $status }}">{{ $status }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label>ตำแหน่ง</label>
+                <select class="form-control" wire:model="role">
+                    @foreach ($listRole as $role)
+                        <option value="{{ $role }}">{{ $role }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
 
