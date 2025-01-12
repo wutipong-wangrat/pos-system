@@ -81,42 +81,6 @@
             </div>
         </div>
     </div>
-
-    <x-modal title="เงินในลิ้นชัก" maxWidth="md" wire:model="showBalanceModal" zIndex="9999">
-        @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
-
-        @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <div class="space-y-4">
-            <label for="drawerBalance" class="block text-sm font-medium text-gray-700 mb-1">เพิ่มเงินในลิ้นชัก</label>
-            <input type="number" wire:model="newDrawerBalance" class="form-control">
-        </div>
-
-        <div class="flex justify-center mt-6 pb-4">
-            <button
-                class="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg mr-2 hover:bg-green-600 transition duration-200"
-                wire:click="changeDrawerBalance('{{ $drawerBalance }}')">
-                <i class="fa-solid fa-check mr-2"></i>
-                บันทึก
-            </button>
-            <button
-                class="flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
-                wire:click="closeDrawerBalanceModal()">
-                <i class="fa-solid fa-xmark mr-2"></i>
-                ยกเลิก
-            </button>
-        </div>
-    </x-modal>
 </div>
 
 @push('scripts')

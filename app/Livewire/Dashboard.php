@@ -14,7 +14,6 @@ class Dashboard extends Component
     public $monthlyIncome = 0;
     public $yearlyIncome = 0;
     public $profit = 0;
-    public $drawerBalance = 0;
     public $totalProducts = 0;
 
     public $weeklyChartData;
@@ -43,9 +42,6 @@ class Dashboard extends Component
         $this->yearlyIncome = CashTransactionModel::where('type', 'cash_in')
         ->where('created_at', '>=', $yearStart)
         ->sum('amount');
-
-        $latestTransaction = CashTransactionModel::latest()->first();
-        $this->drawerBalance = $latestTransaction ? $latestTransaction->balance : 0;
 
         $this->profit = $this->monthlyIncome * 0.3;
         $this->totalProducts = ProductModel::where('status', 'available')->count();
