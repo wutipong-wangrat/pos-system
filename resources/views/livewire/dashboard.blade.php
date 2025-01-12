@@ -6,42 +6,41 @@
 
         <!-- Metrics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            <!-- Daily Income Card -->
+            <!-- Weekly Income Card -->
             <div class="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition duration-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-blue-500 rounded-lg">
-                        <i class="fas fa-dollar-sign text-white text-xl"></i>
+                        <i class="fas fa-calendar-week text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-gray-600">รายได้วันนี้</p>
-                        <p class="text-xl font-bold text-gray-800">฿{{ number_format($dailyIncome, 2) }}</p>
+                        <p class="text-sm text-gray-600">รายได้สัปดาห์นี้</p>
+                        <p class="text-xl font-bold text-gray-800">฿{{ number_format($weeklyIncome, 2) }}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Profit Card -->
+            <!-- Monthly Income Card -->
             <div class="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition duration-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-green-500 rounded-lg">
-                        <i class="fas fa-chart-line text-white text-xl"></i>
+                        <i class="fas fa-calendar-alt text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-gray-600">กำไร</p>
-                        <p class="text-xl font-bold text-gray-800">฿{{ number_format($profit, 2) }}</p>
+                        <p class="text-sm text-gray-600">รายได้เดือนนี้</p>
+                        <p class="text-xl font-bold text-gray-800">฿{{ number_format($monthlyIncome, 2) }}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Drawer Balance Card -->
-            <div class="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition duration-200 hover:scale-105 cursor-pointer"
-                wire:click="openDrawerBalanceModal()">
+            <!-- Yearly Income Card -->
+            <div class="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition duration-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-yellow-500 rounded-lg">
-                        <i class="fas fa-cash-register text-white text-xl"></i>
+                        <i class="fas fa-calendar text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-gray-600">เงินในลิ้นชัก</p>
-                        <p class="text-xl font-bold text-gray-800">฿{{ number_format($drawerBalance, 2) }}</p>
+                        <p class="text-sm text-gray-600">รายได้ปีนี้</p>
+                        <p class="text-xl font-bold text-gray-800">฿{{ number_format($yearlyIncome, 2) }}</p>
                     </div>
                 </div>
             </div>
@@ -63,22 +62,22 @@
 
         <!-- Charts -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Daily Sales Chart -->
-            <div class="bg-white rounded-xl shadow-sm p-6">
-                <h2 class="text-lg font-semibold mb-4 text-gray-800">ยอดขายรายวัน</h2>
-                <div id="dailyChart" style="height: 300px;" class="text-gray-800"></div>
-            </div>
-
             <!-- Weekly Sales Chart -->
             <div class="bg-white rounded-xl shadow-sm p-6">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800">ยอดขายรายสัปดาห์</h2>
                 <div id="weeklyChart" style="height: 300px;" class="text-gray-800"></div>
             </div>
 
-            <!-- Income Distribution Chart -->
+            <!-- Monthly Sales Chart -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-lg font-semibold mb-4 text-gray-800">ยอดขายรายเดือน</h2>
+                <div id="monthlyChart" style="height: 300px;" class="text-gray-800"></div>
+            </div>
+
+            <!-- Yearly Sales Chart -->
             <div class="bg-white rounded-xl shadow-sm p-6 lg:col-span-2">
-                <h2 class="text-lg font-semibold mb-4 text-gray-800">สัดส่วนรายได้</h2>
-                <div id="pieChart" style="height: 300px;" class="text-gray-800"></div>
+                <h2 class="text-lg font-semibold mb-4 text-gray-800">ยอดขายรายปี</h2>
+                <div id="yearlyChart" style="height: 300px;" class="text-gray-800"></div>
             </div>
         </div>
     </div>
@@ -131,30 +130,6 @@
                 }
             };
 
-            // Daily Sales Chart
-            const dailyOptions = {
-                chart: {
-                    type: 'line',
-                    height: 300,
-                    ...chartTheme
-                },
-                series: [{
-                    name: 'ยอดขาย',
-                    data: @json($dailyChartData->pluck('total'))
-                }],
-                xaxis: {
-                    categories: @json($dailyChartData->pluck('hour'))
-                },
-                title: {
-                    text: 'ยอดขายรายชั่วโมง',
-                    align: 'center'
-                },
-                stroke: {
-                    curve: 'smooth'
-                }
-            };
-            new ApexCharts(document.querySelector("#dailyChart"), dailyOptions).render();
-
             // Weekly Sales Chart
             const weeklyOptions = {
                 chart: {
@@ -170,43 +145,58 @@
                     categories: @json($weeklyChartData->pluck('day'))
                 },
                 title: {
-                    text: 'ยอดขายรายวัน',
+                    text: 'ยอดขายรายวัน (7 วันล่าสุด)',
                     align: 'center'
                 },
                 colors: ['#3B82F6']
             };
             new ApexCharts(document.querySelector("#weeklyChart"), weeklyOptions).render();
 
-            // Pie Chart
-            const pieOptions = {
+            // Monthly Sales Chart
+            const monthlyOptions = {
                 chart: {
-                    type: 'pie',
+                    type: 'line',
                     height: 300,
                     ...chartTheme
                 },
-                series: @json(collect($pieChartData)->pluck('value')->filter()), // กรองค่าที่เป็น null หรือ 0 ออก
-                labels: @json(collect($pieChartData)->pluck('name')),
+                series: [{
+                    name: 'ยอดขาย',
+                    data: @json($monthlyChartData->pluck('total'))
+                }],
+                xaxis: {
+                    categories: @json($monthlyChartData->pluck('month'))
+                },
                 title: {
-                    text: 'สัดส่วนรายได้',
+                    text: 'ยอดขายรายเดือน (12 เดือนล่าสุด)',
                     align: 'center'
                 },
-                // เพิ่มการตั้งค่าเพิ่มเติม
-                legend: {
-                    position: 'bottom'
-                },
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        chart: {
-                            width: 300
-                        },
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }]
+                stroke: {
+                    curve: 'smooth'
+                }
             };
-            new ApexCharts(document.querySelector("#pieChart"), pieOptions).render();
+            new ApexCharts(document.querySelector("#monthlyChart"), monthlyOptions).render();
+
+            // Yearly Sales Chart
+            const yearlyOptions = {
+                chart: {
+                    type: 'bar',
+                    height: 300,
+                    ...chartTheme
+                },
+                series: [{
+                    name: 'ยอดขาย',
+                    data: @json($yearlyChartData->pluck('total'))
+                }],
+                xaxis: {
+                    categories: @json($yearlyChartData->pluck('year'))
+                },
+                title: {
+                    text: 'ยอดขายรายปี (5 ปีล่าสุด)',
+                    align: 'center'
+                },
+                colors: ['#10B981']
+            };
+            new ApexCharts(document.querySelector("#yearlyChart"), yearlyOptions).render();
         });
     </script>
 @endpush

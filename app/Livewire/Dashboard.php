@@ -10,41 +10,27 @@ use Livewire\Component;
 
 class Dashboard extends Component
 {
-    public $dailyIncome = 0;
     public $weeklyIncome = 0;
     public $monthlyIncome = 0;
+    public $yearlyIncome = 0;
     public $profit = 0;
     public $drawerBalance = 0;
     public $totalProducts = 0;
 
-    public $dailyChartData;
     public $weeklyChartData;
+    public $monthlyChartData;
+    public $yearlyChartData;
     public $pieChartData;
-
-    public $showBalanceModal = false;
-    public $newDrawerBalance = 0;
 
     public function mount(){
         $this->loadMetrics();
         $this->loadChartData();
-        $this->loadDrawerBalance();
-    }
-
-    public function loadDrawerBalance(){
-        $latestTransaction = CashTransactionModel::orderBy('created_at', 'desc')
-        ->orderBy('id', 'desc')->first();
-
-        $this->drawerBalance = $latestTransaction ? $latestTransaction->balance : 0;
     }
 
     public function loadMetrics(){
-        $today = Carbon::today();
         $weekStart = Carbon::now()->startOfWeek();
         $monthStart = Carbon::now()->startOfMonth();
-
-        $this->dailyIncome = CashTransactionModel::where('type', 'cash_in')
-        ->whereDate('created_at', $today)
-        ->sum('amount');
+        $yearStart = Carbon::now()->startOfYear();
 
         $this->weeklyIncome = CashTransactionModel::where('type', 'cash_in')
         ->where('created_at', '>=', $weekStart)
@@ -54,6 +40,10 @@ class Dashboard extends Component
         ->where('created_at', '>=', $monthStart)
         ->sum('amount');
 
+        $this->yearlyIncome = CashTransactionModel::where('type', 'cash_in')
+        ->where('created_at', '>=', $yearStart)
+        ->sum('amount');
+
         $latestTransaction = CashTransactionModel::latest()->first();
         $this->drawerBalance = $latestTransaction ? $latestTransaction->balance : 0;
 
@@ -61,79 +51,68 @@ class Dashboard extends Component
         $this->totalProducts = ProductModel::where('status', 'available')->count();
     }
 
-    public function loadChartData(){
-        $this->dailyChartData = CashTransactionModel::where('type', 'cash_in')
-        ->whereDate('created_at', Carbon::today())
-        ->select(
-            DB::raw('HOUR(created_at) as hour'), 
-            DB::raw('SUM(amount) as total')
-        )
-        ->groupBy('hour')
-        ->orderBy('hour')
-        ->get()
-        ->map(function ($item) {
-            return [
-                'hour' => sprintf('%02d:00', $item->hour),
-                'total' => $item->total
-            ];
-        });
-
-        // weekly sales chart data
+    public function loadChartData()
+    {
+        // Weekly chart data (last 7 days)
         $this->weeklyChartData = CashTransactionModel::where('type', 'cash_in')
-        ->where('created_at', '>=', Carbon::now()->startOfWeek())
-        ->select(
-            DB::raw('DAY(created_at) as date'), 
-            DB::raw('SUM(amount) as total')
-        )
-        ->groupBy('date')
-        ->orderBy('date')
-        ->get()
-        ->map(function ($item){
-            return [
-                'day' => Carbon::parse($item->date)->format('D'),
-                'total' => $item->total
-            ];
-        });
+            ->where('created_at', '>=', Carbon::now()->subDays(7))
+            ->select(
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('SUM(amount) as total')
+            )
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'day' => Carbon::parse($item->date)->format('D'),
+                    'total' => $item->total
+                ];
+            });
+
+        // Monthly chart data (last 12 months)
+        $this->monthlyChartData = CashTransactionModel::where('type', 'cash_in')
+            ->where('created_at', '>=', Carbon::now()->subMonths(12))
+            ->select(
+                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+                DB::raw('SUM(amount) as total')
+            )
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'month' => Carbon::parse($item->month)->format('M Y'),
+                    'total' => $item->total
+                ];
+            });
+
+        // Yearly chart data (last 5 years)
+        $this->yearlyChartData = CashTransactionModel::where('type', 'cash_in')
+            ->where('created_at', '>=', Carbon::now()->subYears(5))
+            ->select(
+                DB::raw('YEAR(created_at) as year'),
+                DB::raw('SUM(amount) as total')
+            )
+            ->groupBy('year')
+            ->orderBy('year')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'year' => $item->year,
+                    'total' => $item->total
+                ];
+            });
 
         $this->pieChartData = [
-            ['name' => 'รายวัน', 'value' => (float)$this->dailyIncome],
             ['name' => 'รายสัปดาห์', 'value' => (float)$this->weeklyIncome],
-            ['name' => 'รายเดือน', 'value' => (float)$this->monthlyIncome]
+            ['name' => 'รายเดือน', 'value' => (float)$this->monthlyIncome],
+            ['name' => 'รายปี', 'value' => (float)$this->yearlyIncome]
         ];
     }
 
     public function redirectToProducts(){
         return redirect()->route('products');
-    }
-
-    public function openDrawerBalanceModal(){
-        $this->showBalanceModal = true;
-    }
-
-    public function closeDrawerBalanceModal(){
-        $this->showBalanceModal = false;
-    }
-
-    public function changeDrawerBalance($balance){
-        $transaction = new CashTransactionModel();
-
-        if ($this->newDrawerBalance > $this->drawerBalance) {
-            $transaction->type = 'adjust_balance';
-        } else {
-            $transaction->type = 'cash_out';
-        }
-
-        $transaction->previous_balance = $this->drawerBalance;
-        $transaction->balance = $this->newDrawerBalance;
-        $transaction->amount = $this->newDrawerBalance - $this->drawerBalance;
-        $transaction->description = 'Cash change balance from ' . number_format($this->drawerBalance, 0) . ' to ' . number_format($this->newDrawerBalance, 0);
-        $transaction->save();
-
-        $this->drawerBalance = $this->newDrawerBalance;
-        $this->loadMetrics();
-        $this->loadChartData();
-        $this->showBalanceModal = false;
-        $this->newDrawerBalance = 0;
     }
 
     public function render()

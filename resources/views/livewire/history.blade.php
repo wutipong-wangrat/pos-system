@@ -100,20 +100,20 @@
                             <!-- ปุ่มจัดการ -->
                             @if ($order->status !== 'cancelled')
                                 <div class="flex gap-2 justify-end">
-                                    <button wire:click="openStatusModal('{{ $order->id }}')"
+                                    {{-- <button wire:click="openStatusModal('{{ $order->id }}')"
                                         class="px-3 py-1 text-sm rounded-md bg-blue-500 text-white hover:bg-blue-600">
                                         จัดการสถานะ
-                                    </button>
+                                    </button> --}}
                                     <a href="{{ route('receipt.print', ['order' => $order->id]) }}" 
                                        target="_blank"
                                        class="px-3 py-1 text-sm rounded-md bg-green-500 text-white hover:bg-green-600">
                                         พิมพ์ใบเสร็จ
                                     </a>
-                                    <button wire:click="updateOrderStatus('{{ $order->id }}', 'cancelled')"
+                                    {{-- <button wire:click="updateOrderStatus('{{ $order->id }}', 'cancelled')"
                                         class="px-3 py-1 text-sm rounded-md bg-red-500 text-white hover:bg-red-600"
                                         onclick="return confirm('ยืนยันการยกเลิกออเดอร์?')">
                                         ยกเลิก
-                                    </button>
+                                    </button> --}}
                                 </div>
                             @endif
                         </div>

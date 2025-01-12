@@ -88,7 +88,7 @@
                         </svg>
                         เงินสด
                     </button>
-                    <button wire:click="$set('paymentMethod', 'card')"
+                    {{-- <button wire:click="$set('paymentMethod', 'card')"
                         class="px-6 py-3 rounded-lg flex items-center gap-2 {{ $paymentMethod === 'card' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
@@ -97,7 +97,7 @@
                                 clip-rule="evenodd" />
                         </svg>
                         บัตรเครดิต
-                    </button>
+                    </button> --}}
                 </div>
 
                 <!-- Cash Payment Panel -->
@@ -139,7 +139,7 @@
                 @endif
 
                 <!-- Card Payment Panel -->
-                @if ($paymentMethod === 'card')
+                {{-- @if ($paymentMethod === 'card')
                     <div class="bg-white p-4 rounded-lg shadow-sm border">
                         @if ($stripeClientSecret)
                             <div id="card-element" class="mb-4 min-h-[40px] border p-3 rounded">
@@ -152,7 +152,7 @@
                             </div>
                         @endif
                     </div>
-                @endif
+                @endif --}}
             </div>
         @endif
 
@@ -168,18 +168,6 @@
                 </span>
             </button>
         </div>
-
-        {{-- <div class="mt-6">
-            <button wire:click="$dispatch('processStripePayment', { clientSecret: '{{ $stripeClientSecret }}' })"
-                class="w-full bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                <span wire:loading.remove wire:target="processCheckout">
-                    ยืนยันการชำระเงิน
-                </span>
-                <span wire:loading wire:target="processCheckout">
-                    กำลังดำเนินการ...
-                </span>
-            </button>
-        </div> --}}
 
         <!-- Flash Messages -->
         @if (session()->has('success'))
@@ -199,76 +187,6 @@
 
 @push('scripts')
 <script>
-    document.addEventListener('livewire:load', function() {
-        // ตรวจสอบว่ามี Stripe key หรือไม่
-        const stripeKey = '{{ config('services.stripe.key') }}';
-        if (!stripeKey) {
-            console.error('Stripe publishable key is missing');
-            return;
-        }
-
-        const stripe = Stripe(stripeKey);
-        let elements;
-        let card;
-
-        // สร้าง card element เมื่อได้รับ client secret
-        Livewire.on('stripeClientSecretUpdated', (clientSecret) => {
-            console.log('Received client secret:', clientSecret);
-            
-            if (elements) {
-                card.destroy();
-            }
-
-            elements = stripe.elements();
-            card = elements.create('card', {
-                style: {
-                    base: {
-                        fontSize: '16px',
-                        color: '#32325d',
-                        '::placeholder': {
-                            color: '#aab7c4'
-                        }
-                    },
-                    invalid: {
-                        color: '#fa755a',
-                        iconColor: '#fa755a'
-                    }
-                }
-            });
-
-            card.mount('#card-element');
-
-            card.addEventListener('change', function(event) {
-                const displayError = document.getElementById('card-errors');
-                if (event.error) {
-                    displayError.textContent = event.error.message;
-                } else {
-                    displayError.textContent = '';
-                }
-            });
-        });
-
-        // จัดการการชำระเงิน
-        Livewire.on('processStripePayment', async ({ clientSecret }) => {
-            console.log('Processing payment with secret:', clientSecret);
-            
-            try {
-                const result = await stripe.confirmCardPayment(clientSecret, {
-                    payment_method: {
-                        card: card,
-                    }
-                });
-
-                if (result.error) {
-                    document.getElementById('card-errors').textContent = result.error.message;
-                } else {
-                    @this.processCheckout();
-                }
-            } catch (error) {
-                console.error('Stripe error:', error);
-                document.getElementById('card-errors').textContent = 'เกิดข้อผิดพลาดในการชำระเงิน';
-            }
-        });
-    });
+    
 </script>
 @endpush
