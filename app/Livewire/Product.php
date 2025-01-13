@@ -169,7 +169,7 @@ class Product extends Component
 
             $product->status = $this->quantity > 0 ? 'available' : 'out_of_stock';
             $product->save();
-            session()->flash('success', 'อัพเดทรายการ "' . $this->name . '" สําเร็จ');
+            session()->flash('update', 'อัพเดทรายการ "' . $this->name . '" สําเร็จ');
 
             // $this->fetchData();
             $this->closeModalEdit();
@@ -203,7 +203,7 @@ class Product extends Component
 
             // $this->fetchData();
             $this->showModalDelete = false;
-            session()->flash('success', 'ลบรายการ "' . $this->nameForDelete . '" เรียบร้อย');
+            session()->flash('delete', 'ลบรายการ "' . $this->nameForDelete . '" เรียบร้อย');
         } catch (\Exception $th) {
             //throw $th;
             session()->flash('error', $th->getMessage());
@@ -212,7 +212,7 @@ class Product extends Component
     }
 
     public function resetForm()
-{
+    {
         $this->name = '';
         $this->description = '';
         $this->price = 0;

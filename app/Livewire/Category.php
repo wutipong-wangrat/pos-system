@@ -102,7 +102,7 @@ class Category extends Component
             $category->save();
 
             $this->showModalEdit = false;
-            session()->flash('success', `อัพเดทรายการ {{ $this->name }} เรียบร้อย`);
+            session()->flash('update', 'อัพเดทรายการ "' . $this->name . '" เรียบร้อย');
         } catch (\Exception $th) {
             //throw $th;
             session()->flash('error', $th->getMessage());
@@ -117,7 +117,7 @@ class Category extends Component
             $category->delete();
 
             $this->showModalDelete = false;
-            session()->flash('success', `ลบรายการ {{ $this->nameForDelete }} เรียบร้อย`);
+            session()->flash('delete', 'ลบรายการ "' . $this->nameForDelete . '" เรียบร้อย');
         } catch (\Exception $th) {
             //throw $th;
             session()->flash('error', $th->getMessage());
@@ -143,10 +143,8 @@ class Category extends Component
             $category->description = $this->description;
             $category->save();
 
-            session()->flash('success', `เพิ่มรายการ {{ $this->name }} เรียบร้อย`);
-            $this->name = '';
-            $this->description = '';
             $this->showModal = false;
+            session()->flash('success', 'เพิ่มรายการ"' . $this->name .'"เรียบร้อย');
         } catch (\Exception $th) {
             session()->flash('error', $th->getMessage());
         }

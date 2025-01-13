@@ -21,12 +21,12 @@
             </select>
 
             <!-- Status Filter -->
-            <select wire:model.live="status" class="rounded-lg border-gray-300 shadow-sm">
+            {{-- <select wire:model.live="status" class="rounded-lg border-gray-300 shadow-sm">
                 <option value="">สถานะทั้งหมด</option>
                 <option value="completed">สำเร็จ</option>
                 <option value="pending">รอดำเนินการ</option>
                 <option value="cancelled">ยกเลิก</option>
-            </select>
+            </select> --}}
 
             <!-- Items Per Page -->
             <select wire:model.live="perPage" class="rounded-lg border-gray-300 shadow-sm">

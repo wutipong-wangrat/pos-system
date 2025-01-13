@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class User extends Component{
     public $showModal = false;
+    public $showModalEdit = false;
     public $showModalDelete = false;
     public $id;
     public $name;
@@ -40,19 +41,6 @@ class User extends Component{
     }
 
     public function save(){
-        if ($this->id != null) {
-            $user = UserModel::find($this->id);
-            $user->name = $this->name;
-            $user->email = $this->email;
-            $user->role = $this->role;
-            $user->status = $this->status;
-            $user->save();
-
-            $this->fetchData();
-            $this->showModal = false;
-            return;
-        }
-
         $userExists = UserModel::where('email', $this->email)->first();
         if ($userExists) {
             $this->mailError = 'อีเมลนี้มีผู้ใช้งานแล้ว';
@@ -78,6 +66,7 @@ class User extends Component{
         
         $this->fetchData();
         $this->showModal = false;
+        session()->flash('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
     }
 
     public function checkPasswordLength(){
@@ -87,7 +76,10 @@ class User extends Component{
     }
 
     public function openModalEdit($id){
-        $this->showModal = true;
+        $this->showModalEdit = true;
+        $this->errorLengthPassword = null;
+        $this->mailError = null;
+        $this->error = null;
         $this->id = $id;
 
         $user = UserModel::find($id);
@@ -106,7 +98,8 @@ class User extends Component{
         $user->save();
 
         $this->fetchData();
-        $this->showModal = false;
+        $this->showModalEdit = false;
+        session()->flash('update', 'อัพเดทผู้ใช้งาน "' . $this->name . '" เรียบร้อย');
     }
 
     public function openModalDelete($id, $name){
@@ -119,6 +112,7 @@ class User extends Component{
         UserModel::find($this->id)->delete();
         $this->fetchData();
         $this->showModalDelete = false;
+        session()->flash('delete', 'ลบผู้ใช้งาน "' . $this->nameForDelete . '" เรียบร้อย');
     }
     
     public function render(){
