@@ -1,6 +1,7 @@
 <div class="font-noto_thai">
     <!-- Mobile Menu Toggle Button -->
-    <button class="fixed top-4 left-4 z-50 lg:hidden bg-slate-800 text-white p-2 rounded-lg shadow-lg hover:bg-slate-700 transition-colors"
+    <button
+        class="fixed top-4 left-4 z-50 lg:hidden bg-slate-800 text-white p-2 rounded-lg shadow-lg hover:bg-slate-700 transition-colors"
         onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
         <i class="fa-solid fa-bars text-xl"></i>
     </button>
@@ -24,11 +25,13 @@
                 </div>
 
                 <ul class="space-y-2">
-                    <li wire:click="changeMenu('dashboard')"
-                        class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'dashboard' ? 'bg-slate-700' : '' }}">
-                        <i class="fa-solid fa-chart-line w-6"></i>
-                        <span>Dashboard</span>
-                    </li>
+                    @if ($user_role == 'admin')
+                        <li wire:click="changeMenu('dashboard')"
+                            class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'dashboard' ? 'bg-slate-700' : '' }}">
+                            <i class="fa-solid fa-chart-line w-6"></i>
+                            <span>Dashboard</span>
+                        </li>
+                    @endif
 
                     <li wire:click="changeMenu('order')"
                         class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'order' ? 'bg-slate-700' : '' }}">
@@ -36,29 +39,33 @@
                         <span>สั่งซื้อสินค้า</span>
                     </li>
 
-                    <li wire:click="changeMenu('categories')"
-                        class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'categories' ? 'bg-slate-700' : '' }}">
-                        <i class="fa-solid fa-list w-6"></i>
-                        <span>หมวดหมู่สินค้า</span>
-                    </li>
+                    @if ($user_role == 'admin')
+                        <li wire:click="changeMenu('categories')"
+                            class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'categories' ? 'bg-slate-700' : '' }}">
+                            <i class="fa-solid fa-list w-6"></i>
+                            <span>หมวดหมู่สินค้า</span>
+                        </li>
 
-                    <li wire:click="changeMenu('products')"
-                        class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'products' ? 'bg-slate-700' : '' }}">
-                        <i class="fa-solid fa-box w-6"></i>
-                        <span>สินค้า</span>
-                    </li>
-
+                        <li wire:click="changeMenu('products')"
+                            class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'products' ? 'bg-slate-700' : '' }}">
+                            <i class="fa-solid fa-box w-6"></i>
+                            <span>สินค้า</span>
+                        </li>
+                    @endif
                     <li wire:click="changeMenu('history')"
                         class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'history' ? 'bg-slate-700' : '' }}">
                         <i class="fa-solid fa-history w-6"></i>
                         <span>ประวัติการขาย</span>
                     </li>
 
-                    <li wire:click="changeMenu('users')"
-                        class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'users' ? 'bg-slate-700' : '' }}">
-                        <i class="fa-solid fa-users w-6"></i>
-                        <span>จัดการผู้ใช้</span>
-                    </li>
+                    @if ($user_role == 'admin')
+                        <li wire:click="changeMenu('users')"
+                            class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'users' ? 'bg-slate-700' : '' }}">
+                            <i class="fa-solid fa-users w-6"></i>
+                            <span>จัดการผู้ใช้</span>
+                        </li>
+                    @endif
+
                 </ul>
             </div>
 
@@ -140,21 +147,18 @@
         <div class="space-y-4">
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                <input type="text" wire:model="username"
-                    class="form-control">
+                <input type="text" wire:model="username" class="form-control">
             </div>
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password ใหม่</label>
-                <input type="password" wire:model="password"
-                    class="form-control">
+                <input type="password" wire:model="password" class="form-control">
             </div>
 
             <div>
                 <label for="password_confirm" class="block text-sm font-medium text-gray-700 mb-1">ยืนยัน
                     Password</label>
-                <input type="password" wire:model="password_confirm"
-                    class="form-control">
+                <input type="password" wire:model="password_confirm" class="form-control">
             </div>
         </div>
 
@@ -176,43 +180,43 @@
 </div>
 
 @push('scripts')
-<script>
-    document.addEventListener('livewire:init', function() {
-        const sidebar = document.getElementById('sidebar');
-        // const overlay = document.getElementById('sidebar-overlay');
+    <script>
+        document.addEventListener('livewire:init', function() {
+            const sidebar = document.getElementById('sidebar');
+            // const overlay = document.getElementById('sidebar-overlay');
 
-        // function toggleOverlay(show) {
-        //     overlay.style.display = show ? 'block' : 'none';
-        // }
+            // function toggleOverlay(show) {
+            //     overlay.style.display = show ? 'block' : 'none';
+            // }
 
-        // Toggle overlay when sidebar opens/closes on mobile
-        // const observer = new MutationObserver((mutations) => {
-        //     mutations.forEach((mutation) => {
-        //         if (mutation.target.classList.contains('-translate-x-full')) {
-        //             toggleOverlay(false);
-        //         } else {
-        //             toggleOverlay(true);
-        //         }
-        //     });
-        // });
+            // Toggle overlay when sidebar opens/closes on mobile
+            // const observer = new MutationObserver((mutations) => {
+            //     mutations.forEach((mutation) => {
+            //         if (mutation.target.classList.contains('-translate-x-full')) {
+            //             toggleOverlay(false);
+            //         } else {
+            //             toggleOverlay(true);
+            //         }
+            //     });
+            // });
 
-        // observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+            // observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
 
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (window.innerWidth < 1024) {
-                sidebar.classList.add('-translate-x-full');
-                toggleOverlay(false);
-            } else {
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth < 1024) {
+                    sidebar.classList.add('-translate-x-full');
+                    toggleOverlay(false);
+                } else {
+                    sidebar.classList.remove('-translate-x-full');
+                    toggleOverlay(false);
+                }
+            });
+
+            // Initialize sidebar state
+            if (window.innerWidth >= 1024) {
                 sidebar.classList.remove('-translate-x-full');
-                toggleOverlay(false);
             }
         });
-
-        // Initialize sidebar state
-        if (window.innerWidth >= 1024) {
-            sidebar.classList.remove('-translate-x-full');
-        }
-    });
-</script>
+    </script>
 @endpush

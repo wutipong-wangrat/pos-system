@@ -10,6 +10,7 @@ class Sidebar extends Component
     public $currentMenu = '';
     public $user_name;
     public $user_email;
+    public $user_role = '';
     public $showModal = false;
     public $showModalEdit = false;
     public $username;
@@ -107,6 +108,7 @@ class Sidebar extends Component
         $users = User::find(session()->get('user_id'));
         $this->user_name = $users->name;
         $this->user_email = $users->email;
+        $this->user_role = $users->role;
         return view('livewire.sidebar', compact('users'));
     }
 }
