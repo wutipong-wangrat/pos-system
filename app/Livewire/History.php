@@ -4,11 +4,11 @@ namespace App\Livewire;
 
 use App\Models\OrderModel;
 use Livewire\Component;
-use Livewire\withPagination;
+use Livewire\WithPagination;
 
 class History extends Component
 {
-    use withPagination;
+    use WithPagination;
 
     public $searchTerm = '';
     public $dateRange = '';
