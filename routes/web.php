@@ -10,18 +10,16 @@ use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard']);
     Route::get('/categories', [CategoryController::class, 'category']);
     Route::get('/products', [ProductController::class, 'product'])->name('products');
     Route::get('/users', [UserController::class, 'user']);
     Route::get('receipt/{order}/print', [ReceiptController::class, 'print'])->name('receipt.print');
 });
-
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::get('/order', [OrderController::class, 'order'])->name('order');
 Route::get('/order/checkout', [CheckoutController::class, 'checkout'])->name('order.checkout');
 Route::get('/history', [HistoryController::class, 'history'])->name('history');

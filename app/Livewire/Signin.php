@@ -38,6 +38,7 @@ class Signin extends Component
             if ($user && Hash::check($this->password, $user->password)) {
                 session()->put('user_id', $user->id);
                 session()->put('user_name', $user->name);
+                // Auth::login($user);
                 $user_role = $user->role;
 
                 if ($user_role == 'admin') {
