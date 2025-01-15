@@ -60,7 +60,7 @@ class Order extends Component
             $this->subtotal += $discountedPrice * $this->cart[$index]['quantity'];
         }
 
-        // $this->tax = $this->subtotal * $this->taxRate;
+        $this->tax = $this->subtotal * $this->taxRate;
         $this->payableAmount = $this->subtotal + $this->tax;
     }
 
