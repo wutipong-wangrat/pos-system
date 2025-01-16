@@ -13,7 +13,6 @@
     
     @vite('resources/css/app.css')
     @livewireStyles()
-    {{-- /https://docs.google.com/presentation/d/1VmwpN7Abw62kfZToZrXd0b8mTSFe0deY8AcV2l4jTBM/edit?usp=sharing --}}
 
     <style>
         @keyframes fadeIn {
