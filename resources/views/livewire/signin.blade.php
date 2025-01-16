@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gradient-to-tr from-green-500 to-green-200 font-noto_thai p-4 flex items-center">
+<div class="min-h-screen bg-blue-100 font-noto_thai p-4 flex items-center">
     <div class="max-w-6xl mx-auto h-full flex items-center justify-center">
         <!-- Main container - make it responsive -->
         <div class="w-full md:w-4/5 lg:w-3/4 xl:w-1/2 grid grid-cols-1 md:grid-cols-2 shadow-xl rounded-xl overflow-hidden">
