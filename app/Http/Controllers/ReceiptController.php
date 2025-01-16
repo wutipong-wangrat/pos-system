@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrderModel;
-use Illuminate\Http\Request;
 
 class ReceiptController extends Controller
 {

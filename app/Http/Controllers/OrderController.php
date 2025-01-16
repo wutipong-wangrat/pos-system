@@ -8,12 +8,4 @@ class OrderController extends Controller
     {
         return view('order');
     }
-
-    // public function checkout(){
-    //     if (!session()->has('cart')) {
-    //         return redirect()->route('order')->with('error', 'Your cart is empty.');
-    //     }
-
-    //     return view('order.checkout');
-    // }
 }

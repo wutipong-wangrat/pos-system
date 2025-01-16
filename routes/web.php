@@ -20,6 +20,9 @@ Route::middleware(['admin'])->group(function () {
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/signin', function () {
+    return view('signin');
+});
 Route::get('/order', [OrderController::class, 'order'])->name('order');
 Route::get('/order/checkout', [CheckoutController::class, 'checkout'])->name('order.checkout');
 Route::get('/history', [HistoryController::class, 'history'])->name('history');

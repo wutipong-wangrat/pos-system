@@ -34,6 +34,7 @@ class Signin extends Component
             $this->errorPassword = $validator->errors()->get('password')[0] ?? null;
         } else {
             $user = User::where('name', $this->username)->first();
+            $this->username = null;
 
             if ($user && Hash::check($this->password, $user->password)) {
                 session()->put('user_id', $user->id);

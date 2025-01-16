@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
 
     @vite('resources/css/app.css')
+    <link rel="icon" href="{{ asset('images/pos.png') }}" type="image/png">
     @livewireStyles()
-    @cloudinaryJS
 </head>
 <body>
     @yield('content')
