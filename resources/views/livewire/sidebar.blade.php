@@ -51,12 +51,13 @@
                             <i class="fa-solid fa-box w-6"></i>
                             <span>สินค้า</span>
                         </li>
+
+                        <li wire:click="changeMenu('history')"
+                            class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'history' ? 'bg-slate-700' : '' }}">
+                            <i class="fa-solid fa-history w-6"></i>
+                            <span>ประวัติการขาย</span>
+                        </li>
                     @endif
-                    <li wire:click="changeMenu('history')"
-                        class="menu-item flex items-center p-2 rounded-lg text-white hover:bg-slate-700 cursor-pointer transition-colors {{ $currentMenu == 'history' ? 'bg-slate-700' : '' }}">
-                        <i class="fa-solid fa-history w-6"></i>
-                        <span>ประวัติการขาย</span>
-                    </li>
 
                     @if ($user_role == 'admin')
                         <li wire:click="changeMenu('users')"
@@ -74,23 +75,32 @@
                 <div class="flex flex-col space-y-4">
                     <!-- User Info -->
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-white">{{ $user_name ?? 'Tester' }}</p>
-                        <p class="text-xs text-slate-400">{{ $user_email ?? 'tester@example.com' }}</p>
+                        <p class="text-sm font-medium text-white">{{ $user_name ?? 'User' }}</p>
+                        <p class="text-xs text-slate-400">{{ $user_email ?? 'user@example.com' }}</p>
                     </div>
 
                     <!-- Profile Actions -->
-                    <div class="flex flex-col space-y-2">
-                        <button wire:click="editProfile"
-                            class="w-full px-3 py-2 text-sm bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors flex items-center justify-center">
-                            <i class="fa-solid fa-pencil mr-2"></i>
-                            แก้ไขข้อมูลส่วนตัว
-                        </button>
+                    @if ($user_role == 'admin')
+                        <div class="flex flex-col space-y-2">
+                            <button wire:click="editProfile"
+                                class="w-full px-3 py-2 text-sm bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors flex items-center justify-center">
+                                <i class="fa-solid fa-pencil mr-2"></i>
+                                แก้ไขข้อมูลส่วนตัว
+                            </button>
+                            <button wire:click="showModal = true"
+                                class="w-full px-3 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center">
+                                <i class="fa-solid fa-right-from-bracket mr-2"></i>
+                                ออกจากระบบ
+                            </button>
+                        </div>
+                    @endif
+                    @if ($user_role == 'user')
                         <button wire:click="showModal = true"
                             class="w-full px-3 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center">
                             <i class="fa-solid fa-right-from-bracket mr-2"></i>
                             ออกจากระบบ
                         </button>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -181,29 +191,9 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('livewire:init', function() {
+        document.addEventListener('livewire:init', function () {
             const sidebar = document.getElementById('sidebar');
-            // const overlay = document.getElementById('sidebar-overlay');
-
-            // function toggleOverlay(show) {
-            //     overlay.style.display = show ? 'block' : 'none';
-            // }
-
-            // Toggle overlay when sidebar opens/closes on mobile
-            // const observer = new MutationObserver((mutations) => {
-            //     mutations.forEach((mutation) => {
-            //         if (mutation.target.classList.contains('-translate-x-full')) {
-            //             toggleOverlay(false);
-            //         } else {
-            //             toggleOverlay(true);
-            //         }
-            //     });
-            // });
-
-            // observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
-
-            // Handle window resize
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', function () {
                 if (window.innerWidth < 1024) {
                     sidebar.classList.add('-translate-x-full');
                     toggleOverlay(false);

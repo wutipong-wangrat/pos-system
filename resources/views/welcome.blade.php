@@ -48,9 +48,10 @@
             หากมีข้อผิดพลาดประการใดก็ขออภัยมา ณ ที่นี้ด้วยนะครับ
           </p>
           <div class="flex gap-4 fade-in-delay-2">
-            <a href="/signin" class="bg-blue-500 hover:bg-blue-700 px-8 py-3 hover:underline hover:underline-offset-2 text-white rounded-lg block sm:inline-block mt-4 text-center font-bold duration-200">
+              <a href="/signin" class="bg-blue-500 hover:bg-blue-700 px-8 py-3 hover:underline hover:underline-offset-2 text-white rounded-lg block sm:inline-block mt-4 text-center font-bold duration-200">
                 เข้าสู่ระบบ
               </a>
+              <a href="/auto-login" class="bg-amber-500 hover:bg-amber-700 px-8 py-3 hover:underline hover:underline-offset-2 text-white rounded-lg block sm:inline-block mt-4 text-center font-bold duration-200">เข้าใช้งาน</a>
               <a href="https://docs.google.com/presentation/d/1VmwpN7Abw62kfZToZrXd0b8mTSFe0deY8AcV2l4jTBM/edit?usp=sharing" target="_blank"
               class="bg-zinc-500 hover:bg-zinc-700 px-8 py-3 hover:underline hover:underline-offset-2 text-white rounded-lg block sm:inline-block mt-4 text-center font-bold duration-200">
                 คู่มือการใช้งาน
